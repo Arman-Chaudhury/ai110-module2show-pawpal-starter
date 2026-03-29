@@ -31,6 +31,30 @@ The scheduler now includes three algorithmic improvements beyond basic priority 
 - **Recurring tasks** — Tasks can be marked `frequency="daily"` or `frequency="weekly"`. Calling `pet.complete_task(task)` marks it done and automatically re-queues a fresh copy with a `due_date` of `today + 1 day` (or `+ 7 days`), so recurring care never falls off the list.
 - **Conflict detection** — `Scheduler.detect_conflicts(schedule)` scans every pair of scheduled tasks and returns a warning string for any that overlap in time, without crashing the program.
 
+## Testing PawPal+
+
+Run the full test suite with:
+
+```bash
+source .venv/bin/activate
+python -m pytest tests/ -v
+```
+
+The suite contains **21 tests** covering:
+
+| Area | What is verified |
+|---|---|
+| Task completion | `mark_complete()` flips status; completed tasks are excluded from schedule |
+| Recurrence | Daily tasks create a next-day copy; weekly tasks create a next-week copy; one-off tasks do not re-queue |
+| Pet management | `add_task()` stamps `pet_name`; task count increases correctly |
+| Edge cases | Pet with zero tasks produces empty schedule; one-off tasks don't re-queue |
+| Sorting | `sort_by_time()` returns morning → anytime → afternoon → evening order |
+| Filtering | `filter_tasks()` correctly narrows by pet name and completion status |
+| Scheduling | Respects `available_minutes`; high priority before low priority |
+| Conflict detection | Overlapping tasks flagged; exact same start time flagged; sequential tasks clear; generated schedule always conflict-free |
+
+**Confidence level: ★★★★☆** — All happy paths and the main edge cases are covered. Edge cases not yet tested: tasks that span midnight, owners with zero pets, very large task pools near the time limit.
+
 ## Getting started
 
 ### Setup
