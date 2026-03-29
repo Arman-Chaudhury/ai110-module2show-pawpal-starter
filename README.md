@@ -22,6 +22,28 @@ Your final app should:
 - Display the plan clearly (and ideally explain the reasoning)
 - Include tests for the most important scheduling behaviors
 
+## Features
+
+| Feature | Description |
+|---|---|
+| **Multi-pet support** | Add multiple pets under one owner; tasks are tracked per pet |
+| **Priority scheduling** | Tasks sorted high → medium → low; low-priority tasks dropped first when time runs out |
+| **Time-slot hints** | Each task declares a preferred slot (morning / afternoon / evening / anytime); scheduler places tasks into the right part of the day |
+| **Recurring tasks** | Mark a task `daily` or `weekly`; the next occurrence is automatically queued with an updated due date |
+| **Sort by time** | View any task list ordered chronologically by time slot |
+| **Filter tasks** | Narrow the task list by pet name and/or completion status |
+| **Conflict detection** | Schedule is scanned for overlapping tasks; warnings shown in the UI without crashing |
+| **Explain plan** | Every scheduled task includes a human-readable reason explaining when and why it was placed |
+
+## Demo
+
+To run the app locally:
+
+```bash
+source .venv/bin/activate
+streamlit run app.py
+```
+
 ## Smarter Scheduling
 
 The scheduler now includes three algorithmic improvements beyond basic priority ordering:
