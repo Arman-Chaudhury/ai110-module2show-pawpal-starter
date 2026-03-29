@@ -2,15 +2,75 @@
 
 ## 1. System Design
 
+### Three Core User Actions
+1. **Add a pet** — The user enters basic info about their pet (name, species, age) and themselves (name, time available per day).
+2. **Add/manage care tasks** — The user creates tasks (e.g., morning walk, feeding, medication) with a duration, priority level, and preferred time of day.
+3. **Generate a daily schedule** — The system builds an ordered daily plan that fits within the owner's available time, prioritizing high-importance tasks and explaining why each task was included.
+
+---
+
+### Mermaid UML Class Diagram
+
+```mermaid
+classDiagram
+    class Owner {
+        +str name
+        +int available_minutes
+        +list preferences
+        +add_pet(pet)
+        +update_preferences(preferences)
+    }
+    class Pet {
+        +str name
+        +str species
+        +int age
+        +Owner owner
+    }
+    class Task {
+        +str title
+        +int duration_minutes
+        +str priority
+        +str category
+        +str preferred_time
+    }
+    class ScheduledTask {
+        +Task task
+        +str start_time
+        +str reason
+    }
+    class Scheduler {
+        +Owner owner
+        +Pet pet
+        +list tasks
+        +add_task(task)
+        +generate_schedule()
+        +explain_plan(schedule)
+    }
+
+    Owner "1" --> "1..*" Pet : owns
+    Scheduler --> Owner : constrained by
+    Scheduler --> Pet : plans for
+    Scheduler --> "0..*" Task : schedules
+    Scheduler --> "0..*" ScheduledTask : produces
+    ScheduledTask --> Task : wraps
+```
+
+---
+
 **a. Initial design**
 
-- Briefly describe your initial UML design.
-- What classes did you include, and what responsibilities did you assign to each?
+The initial design uses five classes:
+- **Owner** — holds the owner's name, total available minutes per day, and any scheduling preferences (e.g., "prefers morning walks"). It acts as the source of time constraints for the scheduler.
+- **Pet** — holds basic pet info (name, species, age) and a reference to its owner. It is the subject of the care plan.
+- **Task** — represents a single care activity with a title, duration, priority (low/medium/high), category (walk/feed/meds/grooming/enrichment), and a preferred time of day. Tasks are the raw inputs to the scheduler.
+- **ScheduledTask** — a wrapper that pairs a Task with a concrete start time and a human-readable reason explaining why it was placed at that time. This is the output unit of the scheduler.
+- **Scheduler** — the core logic class. It holds a reference to the Owner and Pet, maintains the list of unscheduled Tasks, and exposes `generate_schedule()` (builds the ordered plan) and `explain_plan()` (produces a narrative summary).
+
+Relationships: An Owner owns one or more Pets. The Scheduler is constrained by the Owner's available time, plans for a specific Pet, consumes a list of Tasks, and produces a list of ScheduledTasks. Each ScheduledTask wraps exactly one Task.
 
 **b. Design changes**
 
-- Did your design change during implementation?
-- If yes, describe at least one change and why you made it.
+- Design changes will be documented here during implementation.
 
 ---
 
