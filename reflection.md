@@ -83,8 +83,11 @@ Relationships: An Owner owns one or more Pets. The Scheduler is constrained by t
 
 **b. Tradeoffs**
 
-- Describe one tradeoff your scheduler makes.
-- Why is that tradeoff reasonable for this scenario?
+One tradeoff the scheduler makes is using **independent slot cursors** for each time slot (morning, afternoon, evening, anytime) rather than a single global timeline. This means two tasks from different slots can never conflict with each other in the generated schedule — the scheduler guarantees a clean plan by construction.
+
+The tradeoff: the conflict detection method (`detect_conflicts`) is therefore most useful when tasks are added with *manually forced* start times, or when an external source injects tasks that bypass the slot-cursor logic. It will never fire on a schedule produced by `generate_schedule()` itself.
+
+This is reasonable for a pet care app because the goal is a *practical, readable* daily plan, not a minute-perfect calendar. A pet owner benefits more from a guaranteed-clean schedule than from an exact global timeline that might raise spurious conflicts. If the app later supports time-locked tasks (e.g., "vet appointment at 10:15") the conflict detector will become critical.
 
 ---
 

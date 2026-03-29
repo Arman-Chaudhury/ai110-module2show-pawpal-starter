@@ -22,6 +22,15 @@ Your final app should:
 - Display the plan clearly (and ideally explain the reasoning)
 - Include tests for the most important scheduling behaviors
 
+## Smarter Scheduling
+
+The scheduler now includes three algorithmic improvements beyond basic priority ordering:
+
+- **Sort by time** — `Scheduler.sort_by_time(tasks)` orders any task list chronologically by preferred time slot (morning → anytime → afternoon → evening) using a `lambda` key with `sorted()`.
+- **Filter tasks** — `Scheduler.filter_tasks(pet_name, completed)` lets you narrow the full task pool by pet and/or completion status, making it easy to see only what is still pending for a specific animal.
+- **Recurring tasks** — Tasks can be marked `frequency="daily"` or `frequency="weekly"`. Calling `pet.complete_task(task)` marks it done and automatically re-queues a fresh copy with a `due_date` of `today + 1 day` (or `+ 7 days`), so recurring care never falls off the list.
+- **Conflict detection** — `Scheduler.detect_conflicts(schedule)` scans every pair of scheduled tasks and returns a warning string for any that overlap in time, without crashing the program.
+
 ## Getting started
 
 ### Setup
